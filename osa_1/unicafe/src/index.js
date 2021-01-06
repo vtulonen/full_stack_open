@@ -9,6 +9,29 @@ const Button = ({ text, handleClick }) => (
   <button onClick={handleClick}>{text}</button>
 );
 
+const Stats = ({ good, neutral, bad, statsTitle }) => {
+  const countSum = () => {
+    return good + neutral + bad;
+  };
+  const countAverage = () => {
+    return (good - bad) / countSum();
+  };
+  const countPositive = () => {
+    return good / countSum();
+  };
+
+  return (
+    <div className="stats">
+      <Title text={statsTitle} />
+      <StatsItem name={"good"} amount={good} />
+      <StatsItem name={"neutral"} amount={neutral} />
+      <StatsItem name={"bad"} amount={bad} />
+      <StatsItem name={"sum"} amount={countSum()} />
+      <StatsItem name={"average"} amount={countAverage()} />
+      <StatsItem name={"positive"} amount={countPositive()} />
+    </div>
+  );
+};
 const StatsItem = ({ name, amount }) => {
   console.log(amount);
   return (
@@ -43,29 +66,13 @@ const App = () => {
     }
   };
 
-  const countSum = () => {
-    return good + neutral + bad;
-  };
-  const countAverage = () => {
-    return (good - bad) / countSum();
-  };
-  const countPositive = () => {
-    return good / countSum();
-  };
-
   return (
     <div>
       <Title text={feedbackTitle} />
       <Button text={"good"} handleClick={handleClick} />
       <Button text={"neutral"} handleClick={handleClick} />
       <Button text={"bad"} handleClick={handleClick} />
-      <Title text={statsTitle} />
-      <StatsItem name={"good"} amount={good} />
-      <StatsItem name={"neutral"} amount={neutral} />
-      <StatsItem name={"bad"} amount={bad} />
-      <StatsItem name={"sum"} amount={countSum()} />
-      <StatsItem name={"average"} amount={countAverage()} />
-      <StatsItem name={"positive"} amount={countPositive()} />
+      <Stats good={good} neutral={neutral} bad={bad} statsTitle={statsTitle} />
     </div>
   );
 };
