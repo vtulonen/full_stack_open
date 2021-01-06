@@ -9,7 +9,7 @@ const Button = ({ text, handleClick }) => (
   <button onClick={handleClick}>{text}</button>
 );
 
-const Stats = ({ good, neutral, bad, statsTitle }) => {
+const Stats = ({ good, neutral, bad }) => {
   const countSum = () => {
     return good + neutral + bad;
   };
@@ -22,7 +22,6 @@ const Stats = ({ good, neutral, bad, statsTitle }) => {
 
   return (
     <div className="stats">
-      <Title text={statsTitle} />
       <StatsItem name={"good"} amount={good} />
       <StatsItem name={"neutral"} amount={neutral} />
       <StatsItem name={"bad"} amount={bad} />
@@ -72,7 +71,12 @@ const App = () => {
       <Button text={"good"} handleClick={handleClick} />
       <Button text={"neutral"} handleClick={handleClick} />
       <Button text={"bad"} handleClick={handleClick} />
-      <Stats good={good} neutral={neutral} bad={bad} statsTitle={statsTitle} />
+      <Title text={statsTitle} />
+      {good + neutral + bad > 0 ? (
+        <Stats good={good} neutral={neutral} bad={bad} />
+      ) : (
+        <p>No feedback given yet</p>
+      )}
     </div>
   );
 };
