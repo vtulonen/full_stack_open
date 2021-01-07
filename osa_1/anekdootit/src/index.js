@@ -11,8 +11,9 @@ const randomInt = (min, max) => {
 
 const App = ({ anecdotes }) => {
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
 
-  const handleClick = () => {
+  const handleAnotherAnectode = () => {
     let newNum = 0;
     while (newNum === selected) {
       newNum = randomInt(0, anecdotes.length);
@@ -20,11 +21,19 @@ const App = ({ anecdotes }) => {
     setSelected(newNum);
   };
 
+  const handleVote = () => {
+    const updatedVotes = [...votes];
+    updatedVotes[selected] += 1;
+    setVotes(updatedVotes);
+  };
+
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-
-      <Button text="Another anectode" handleClick={handleClick} />
+      <p>has {votes[selected]} votes</p>
+      <Button text="vote" handleClick={handleVote} />
+      <Button text="another anectode" handleClick={handleAnotherAnectode} />
+      
     </div>
   );
 };
