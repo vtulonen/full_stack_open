@@ -17,26 +17,34 @@ const Stats = ({ good, neutral, bad }) => {
     return (good - bad) / countSum();
   };
   const countPositive = () => {
-    return good / countSum();
+    return (good / countSum()) * 100;
   };
 
   return (
-    <div className="stats">
-      <StatsItem name={"good"} amount={good} />
-      <StatsItem name={"neutral"} amount={neutral} />
-      <StatsItem name={"bad"} amount={bad} />
-      <StatsItem name={"sum"} amount={countSum()} />
-      <StatsItem name={"average"} amount={countAverage()} />
-      <StatsItem name={"positive"} amount={countPositive()} />
-    </div>
+    <table className="stats">
+      <tbody>
+        <StatsItem name={"good"} amount={good} />
+        <StatsItem name={"neutral"} amount={neutral} />
+        <StatsItem name={"bad"} amount={bad} />
+        <StatsItem name={"sum"} amount={countSum()} />
+        <StatsItem name={"average"} amount={countAverage().toFixed(1)} />
+        <StatsItem
+          name={"positive"}
+          amount={countPositive().toFixed(1)}
+          sign={"%"}
+        />
+      </tbody>
+    </table>
   );
 };
-const StatsItem = ({ name, amount }) => {
-  console.log(amount);
+const StatsItem = ({ name, amount, sign }) => {
   return (
-    <p>
-      {name} {amount}
-    </p>
+    <tr>
+      <td>{name}</td>
+      <td>
+        {amount} {sign}
+      </td>
+    </tr>
   );
 };
 
