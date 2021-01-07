@@ -9,11 +9,25 @@ const randomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
+const Title = ({ text }) => {
+  return <h1>{text}</h1>;
+};
+
+const TopAnecdote = ({ anecdotes, votes }) => {
+  const maxVote = Math.max(...votes);
+  const indexOfMaxVote = votes.indexOf(maxVote);
+  return maxVote > 0 ? (
+    <p>{anecdotes[indexOfMaxVote]}</p>
+  ) : (
+    <p>No votes cast yet</p>
+  );
+};
+
 const App = ({ anecdotes }) => {
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
 
-  const handleAnotherAnectode = () => {
+  const handleNextAnecdote = () => {
     let newNum = 0;
     while (newNum === selected) {
       newNum = randomInt(0, anecdotes.length);
@@ -29,11 +43,15 @@ const App = ({ anecdotes }) => {
 
   return (
     <div>
+      <Title text={"Anecdote of the day"} />
       <p>{anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
+
       <Button text="vote" handleClick={handleVote} />
-      <Button text="another anectode" handleClick={handleAnotherAnectode} />
-      
+      <Button text="next anecdote" handleClick={handleNextAnecdote} />
+
+      <Title text={"Anecdote with most votes"} />
+      <TopAnecdote anecdotes={anecdotes} votes={votes} />
     </div>
   );
 };
