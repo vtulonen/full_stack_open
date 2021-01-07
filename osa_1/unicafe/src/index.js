@@ -48,39 +48,21 @@ const App = () => {
   const feedbackTitle = "Give feedback";
   const statsTitle = "Statistics";
 
-  const handleClick = (e) => {
-    const clickedBtn = e.target.innerHTML;
-    switch (clickedBtn) {
-      case "good":
-        setGood(good + 1);
-        break;
-      case "neutral":
-        setNeutral(neutral + 1);
-        break;
-      case "bad":
-        setBad(bad + 1);
-        break;
-      default:
-        break;
-    }
-  };
-
   return (
     <div>
       <Title text={feedbackTitle} />
-      <Button text={"good"} handleClick={handleClick} />
-      <Button text={"neutral"} handleClick={handleClick} />
-      <Button text={"bad"} handleClick={handleClick} />
+      <Button text={"good"} handleClick={() => setGood(good + 1)} />
+      <Button text={"neutral"} handleClick={() => setNeutral(neutral + 1)} />
+      <Button text={"bad"} handleClick={() => setBad(bad + 1)} />
       <Title text={statsTitle} />
-      {good + neutral + bad > 0 ? (
-        <Stats good={good} neutral={neutral} bad={bad} />
+
+      {good + neutral + bad > 0 ? ( // if
+        <Stats good={good} neutral={neutral} bad={bad} /> // render if true
       ) : (
-        <p>No feedback given yet</p>
+        <p>No feedback given yet</p> // render if false
       )}
     </div>
   );
 };
 
 ReactDOM.render(<App />, document.getElementById("root"));
-
-export default App;
