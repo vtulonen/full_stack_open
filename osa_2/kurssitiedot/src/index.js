@@ -20,6 +20,7 @@ const Content = ({ course }) => {
       {course.parts.map((item) => (
         <Part key={item.id} name={item.name} exercises={item.exercises} />
       ))}
+      <Total parts={course.parts} />
     </div>
   );
 };
@@ -30,6 +31,15 @@ const Part = (props) => {
       {props.name} {props.exercises}
     </p>
   );
+};
+
+const Total = ({ parts }) => {
+  const total = parts.reduce((sum, part) => {
+    console.log(sum, part);
+    return sum + part.exercises;
+  }, 0);
+
+  return <p className="total">Total of {total} excercises</p>;
 };
 
 const App = () => {
