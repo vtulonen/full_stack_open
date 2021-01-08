@@ -8,6 +8,7 @@ const AddPersonForm = ({
   newNumber,
   setNewNumber,
 }) => {
+  
   const onSubmit = (e) => {
     e.preventDefault();
     const newPerson = {
