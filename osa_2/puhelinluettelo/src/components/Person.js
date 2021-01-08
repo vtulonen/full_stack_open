@@ -1,7 +1,11 @@
 import React from "react";
 
-const Person = ({ name }) => {
-  return <p className="person">{name}</p>;
+const Person = ({ name, number }) => {
+  return (
+    <p className="person">
+      {name} {number}
+    </p>
+  );
 };
 
 export default Person;
