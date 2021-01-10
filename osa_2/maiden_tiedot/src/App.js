@@ -16,7 +16,7 @@ const App = () => {
   return (
     <div>
       <Filter filter={filter} setFilter={setFilter} />
-      <SearchResults countries={countries} filter={filter.toLowerCase()} />
+      {filter !== ""  && <SearchResults countries={countries} filter={filter.toLowerCase()} />}
     </div>
   );
 };

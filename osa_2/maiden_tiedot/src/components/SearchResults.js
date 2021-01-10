@@ -2,15 +2,26 @@ import React, { useState } from "react";
 import Country from "./Country";
 
 const SearchResults = ({ countries, filter }) => {
+  const [countryData, setCountryData] = useState(undefined);
+
   const results = countries.filter((country) => {
     return country.name.toLowerCase().includes(filter);
   });
 
-  const displayResults = results.map((result) => {
+  const handleClick = (e) => {
+    const target = e.target.previousSibling.firstChild.data;
+    const newCountrydata = countries.filter((country) => {
+      return country.name.toLowerCase().includes(target.toLowerCase());
+    });
+    setCountryData(newCountrydata[0]);
+  };
+
+  const displayResults = results.map((result, i) => {
     return (
-      <p key={result.name} className="result">
-        {result.name}
-      </p>
+      <div key={result.name} className="result">
+        <span>{result.name}</span>
+        <button onClick={handleClick}>show</button>
+      </div>
     );
   });
 
@@ -28,6 +39,7 @@ const SearchResults = ({ countries, filter }) => {
       ) : (
         <Country data={results[0]} /> // else display the country information
       )}
+      {countryData !== undefined && <Country data={countryData} />}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import React from "react";
 
 const Country = ({ data }) => {
-  console.log(data);
   const { name, capital, population, languages, flag } = data;
   const displayLanguages = languages.map((item) => {
     return <li key ={item.name}>{item.name}</li>;
@@ -16,7 +15,7 @@ const Country = ({ data }) => {
       <ul>{displayLanguages}</ul>
       <img
         src={flag}
-        alt="Image of the country's flag"
+        alt="The country's flag"
         width="200"
         height="150"
       />
