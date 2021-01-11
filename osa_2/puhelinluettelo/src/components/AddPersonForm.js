@@ -9,6 +9,23 @@ const AddPersonForm = ({
   newNumber,
   setNewNumber,
 }) => {
+  const updatePerson = (id, newPerson) => {
+    if (window.confirm(`${newName} is already in the phonebook. Do you wish to update the number?`)) {
+      personService
+        .update(id, newPerson)
+        .then((response) => {
+          if (response.status === 200) {
+            personService.getAll().then((response) => {
+              setPersons(response.data);
+            });
+          }
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    }
+  };
+
   const addPerson = (e) => {
     e.preventDefault();
     const newPerson = {
@@ -18,17 +35,23 @@ const AddPersonForm = ({
 
     // Palauttaa undefined jos mikään person.name ei vastaa newNamea
     persons.find((person) => person.name === newName) === undefined
-      ? personService
+      ? personService // Jos ei löydy, lisätään luetteloon
           .create(newPerson)
           .then((response) => {
             setPersons(persons.concat(response.data));
             setNewName("");
             setNewNumber("");
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           })
-      : alert(`${newName} is already in the phonebook`);
+      : // Else Puhelinnumeron päivitys jos eroaa annetusta
+      persons.find((person) => person.number === newNumber)
+      ? alert(`${newName} is already in the phonebook`)
+      : updatePerson(
+          persons.find((person) => person.name === newName).id,
+          newPerson
+        );
   };
 
   const handleNameChange = (e) => {
