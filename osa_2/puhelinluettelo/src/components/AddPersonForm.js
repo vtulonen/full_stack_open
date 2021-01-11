@@ -1,4 +1,5 @@
 import React from "react";
+import personService from "../services/persons";
 
 const AddPersonForm = ({
   newName,
@@ -8,8 +9,7 @@ const AddPersonForm = ({
   newNumber,
   setNewNumber,
 }) => {
-  
-  const onSubmit = (e) => {
+  const addPerson = (e) => {
     e.preventDefault();
     const newPerson = {
       name: newName,
@@ -18,7 +18,16 @@ const AddPersonForm = ({
 
     // Palauttaa undefined jos mikään person.name ei vastaa newNamea
     persons.find((person) => person.name === newName) === undefined
-      ? setPersons([...persons, newPerson])
+      ? personService
+          .create(newPerson)
+          .then((response) => {
+            setPersons(persons.concat(response.data));
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch(error => {
+            console.log(error);
+          })
       : alert(`${newName} is already in the phonebook`);
   };
 
@@ -31,7 +40,7 @@ const AddPersonForm = ({
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={addPerson}>
       <div>
         name: <input value={newName} onChange={handleNameChange} />
       </div>
