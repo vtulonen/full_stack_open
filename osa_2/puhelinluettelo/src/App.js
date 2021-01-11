@@ -35,7 +35,7 @@ const App = () => {
         setNewNumber={setNewNumber}
       />
       <h2>Numbers</h2>
-      <DisplayPersons persons={persons} filter={filter.toLowerCase()} />
+      <DisplayPersons persons={persons} setPersons={setPersons} filter={filter.toLowerCase()} />
     </div>
   );
 };
