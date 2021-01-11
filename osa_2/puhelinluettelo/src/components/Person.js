@@ -3,20 +3,22 @@ import personService from "../services/persons";
 
 const Person = ({ name, number, persons, setPersons }) => {
   const deletePerson = () => {
-    const id = persons.find((person) => person.name === name).id;
+    if (window.confirm(`Do you want to delete ${name}?`)) {
+      const id = persons.find((person) => person.name === name).id;
 
-    personService
-      .destroy(id)
-      .then((response) => {
-        if (response.status === 200) {
-          personService.getAll().then((response) => {
-            setPersons(response.data);
-          });
-        }
-      })
-      .catch((error) => {
-        console.log("error", error);
-      });
+      personService
+        .destroy(id)
+        .then((response) => {
+          if (response.status === 200) {
+            personService.getAll().then((response) => {
+              setPersons(response.data);
+            });
+          }
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    }
   };
 
   return (
