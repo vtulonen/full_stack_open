@@ -11,3 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.success {
+  color: green;
+  background: rgb(216, 216, 216);
+  font-size: 1.5rem;
+  border: 2px solid green;
+  border-radius: 5px;
+  padding: .5em .5em;
+  margin: 1rem 0;
+}

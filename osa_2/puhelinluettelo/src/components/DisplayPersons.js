@@ -1,7 +1,7 @@
 import Person from "./Person";
 import React from "react";
 
-const DisplayPersons = ({ persons, setPersons, filter }) => {
+const DisplayPersons = ({ persons, setPersons, filter, displaySuccess }) => {
   return (
     <div className="persons">
       {persons.map((person) => {
@@ -13,6 +13,7 @@ const DisplayPersons = ({ persons, setPersons, filter }) => {
               number={person.number}
               persons={persons}
               setPersons={setPersons}
+              displaySuccess={displaySuccess}
             />
           );
         else return null;

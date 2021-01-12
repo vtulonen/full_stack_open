@@ -8,20 +8,27 @@ const AddPersonForm = ({
   setPersons,
   newNumber,
   setNewNumber,
+  displaySuccess,
 }) => {
+  
   const updatePerson = (id, newPerson) => {
-    if (window.confirm(`${newName} is already in the phonebook. Do you wish to update the number?`)) {
+    if (
+      window.confirm(
+        `${newName} is already in the phonebook. Do you wish to update the number?`
+      )
+    ) {
       personService
         .update(id, newPerson)
         .then((response) => {
           if (response.status === 200) {
             personService.getAll().then((response) => {
               setPersons(response.data);
+              displaySuccess(`${newPerson.name}'s number updated successfully`);
             });
           }
         })
         .catch((error) => {
-          console.log("error", error);
+          console.log(error);
         });
     }
   };
@@ -39,6 +46,7 @@ const AddPersonForm = ({
           .create(newPerson)
           .then((response) => {
             setPersons(persons.concat(response.data));
+            displaySuccess(`${newName} added successfully`);
             setNewName("");
             setNewNumber("");
           })

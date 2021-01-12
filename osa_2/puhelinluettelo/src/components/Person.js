@@ -1,7 +1,7 @@
 import React from "react";
 import personService from "../services/persons";
 
-const Person = ({ name, number, persons, setPersons }) => {
+const Person = ({ name, number, persons, setPersons, displaySuccess }) => {
   const deletePerson = () => {
     if (window.confirm(`Do you want to delete ${name}?`)) {
       const id = persons.find((person) => person.name === name).id;
@@ -12,6 +12,7 @@ const Person = ({ name, number, persons, setPersons }) => {
           if (response.status === 200) {
             personService.getAll().then((response) => {
               setPersons(response.data);
+              displaySuccess(`${name} removed successfully`);
             });
           }
         })
