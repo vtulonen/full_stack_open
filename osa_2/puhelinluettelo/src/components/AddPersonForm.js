@@ -8,9 +8,9 @@ const AddPersonForm = ({
   setPersons,
   newNumber,
   setNewNumber,
-  displaySuccess,
+  displayNotification,
 }) => {
-  
+
   const updatePerson = (id, newPerson) => {
     if (
       window.confirm(
@@ -23,12 +23,13 @@ const AddPersonForm = ({
           if (response.status === 200) {
             personService.getAll().then((response) => {
               setPersons(response.data);
-              displaySuccess(`${newPerson.name}'s number updated successfully`);
+              displayNotification("success", `${newPerson.name}'s number updated successfully`);
             });
           }
         })
         .catch((error) => {
-          console.log(error);
+          displayNotification("error", `${newPerson.name} already removed from the server`);
+          setPersons(persons.filter((person) => person.id !== id));
         });
     }
   };
@@ -46,7 +47,7 @@ const AddPersonForm = ({
           .create(newPerson)
           .then((response) => {
             setPersons(persons.concat(response.data));
-            displaySuccess(`${newName} added successfully`);
+            displayNotification("success", `${newName} added successfully`);
             setNewName("");
             setNewNumber("");
           })

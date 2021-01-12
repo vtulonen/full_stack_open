@@ -9,12 +9,14 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState(null);
 
-  const displaySuccess = (text) => {
-    setSuccessMessage(text);
+  const displayNotification = (type, text) => {
+    setMessageType(type)
+    setMessage(text);
     setTimeout(() => {
-      setSuccessMessage(null);
+      setMessage(null);
     }, 5000);
   };
 
@@ -32,7 +34,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={successMessage} />
+      <Notification type={messageType} message={message} />
       <Filter filter={filter} setFilter={setFilter} />
 
       <h2>Add new</h2>
@@ -43,14 +45,14 @@ const App = () => {
         setPersons={setPersons}
         newNumber={newNumber}
         setNewNumber={setNewNumber}
-        displaySuccess={displaySuccess}
+        displayNotification={displayNotification}
       />
       <h2>Numbers</h2>
       <DisplayPersons
         persons={persons}
         setPersons={setPersons}
         filter={filter.toLowerCase()}
-        displaySuccess={displaySuccess}
+        displayNotification={displayNotification}
       />
     </div>
   );
