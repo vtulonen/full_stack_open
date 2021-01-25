@@ -49,7 +49,7 @@ test('posting a blog increases blogs in db length by 1 and equals the new post',
   expect(blogsAtEnd).toContainEqual(newPost)
 })
 
-test.only('likes defaults to 1 if none is given', async () => {
+test('likes defaults to 1 if none is given', async () => {
   const newPost = {
     title: 'Type wars',
     author: 'Robert C. Martin',
@@ -60,7 +60,15 @@ test.only('likes defaults to 1 if none is given', async () => {
 
   const blogsAtEnd = await helper.blogsInDb()
   expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toEqual(0)
+})
 
+test('return statuscode 400 if no title or url is given', async () => {
+  const newPost = {
+    author: 'Robert C. Martin',
+  }
+
+  const response = await api.post('/api/blogs').send(newPost)
+  expect(response.status).toEqual(400)
 })
 
 afterAll(() => {
