@@ -45,8 +45,22 @@ test('posting a blog increases blogs in db length by 1 and equals the new post',
   const blogsAtEnd = await helper.blogsInDb()
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
-  delete blogsAtEnd[blogsAtEnd.length - 1].id // delete id of new entry to compare 
+  delete blogsAtEnd[blogsAtEnd.length - 1].id // delete id of new entry to compare
   expect(blogsAtEnd).toContainEqual(newPost)
+})
+
+test.only('likes defaults to 1 if none is given', async () => {
+  const newPost = {
+    title: 'Type wars',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+  }
+
+  await api.post('/api/blogs').send(newPost)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toEqual(0)
+
 })
 
 afterAll(() => {
