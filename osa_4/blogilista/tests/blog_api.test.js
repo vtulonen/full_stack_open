@@ -13,63 +13,86 @@ beforeEach(async () => {
   await blogObject.save()
 })
 
-test('blogs are returned as json', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+describe('intials blogs checked to work', () => {
+  test('blogs are returned as json', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('two blogs in db', async () => {
+    const response = await api.get('/api/blogs')
+    expect(response.body).toHaveLength(2)
+  })
+
+  test('returned blogs have a key id, not _id', async () => {
+    const response = await api.get('/api/blogs')
+    console.log(response.body[0].id)
+
+    expect(response.body[0].id).toBeDefined()
+  })
 })
 
-test('two blogs in db', async () => {
-  const response = await api.get('/api/blogs')
-  expect(response.body).toHaveLength(2)
+describe('posting blogs', () => {
+  test('posting a blog increases blogs in db length by 1 and equals the new post', async () => {
+    const newPost = {
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+      likes: 2,
+    }
+
+    await api.post('/api/blogs').send(newPost)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+    delete blogsAtEnd[blogsAtEnd.length - 1].id // delete id of new entry to compare
+    expect(blogsAtEnd).toContainEqual(newPost)
+  })
+
+  test('likes defaults to 1 if none is given', async () => {
+    const newPost = {
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+    }
+
+    await api.post('/api/blogs').send(newPost)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toEqual(0)
+  })
+
+  test('return statuscode 400 if no title or url is given', async () => {
+    const newPost = {
+      author: 'Robert C. Martin',
+    }
+
+    const response = await api.post('/api/blogs').send(newPost)
+    expect(response.status).toEqual(400)
+  })
 })
 
-test('returned blogs have a key id, not _id', async () => {
-  const response = await api.get('/api/blogs')
-  console.log(response.body[0].id)
+describe('deleting a blog', () => {
+  test.only('deleteing succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
 
-  expect(response.body[0].id).toBeDefined()
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+    
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+
+    const titles = blogsAtEnd.map(item => item.title)
+    
+    expect(titles).not.toContain(blogToDelete.title)
+  })
 })
 
-test('posting a blog increases blogs in db length by 1 and equals the new post', async () => {
-  const newPost = {
-    title: 'Type wars',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
-    likes: 2,
-  }
 
-  await api.post('/api/blogs').send(newPost)
-
-  const blogsAtEnd = await helper.blogsInDb()
-  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
-
-  delete blogsAtEnd[blogsAtEnd.length - 1].id // delete id of new entry to compare
-  expect(blogsAtEnd).toContainEqual(newPost)
-})
-
-test('likes defaults to 1 if none is given', async () => {
-  const newPost = {
-    title: 'Type wars',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
-  }
-
-  await api.post('/api/blogs').send(newPost)
-
-  const blogsAtEnd = await helper.blogsInDb()
-  expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toEqual(0)
-})
-
-test('return statuscode 400 if no title or url is given', async () => {
-  const newPost = {
-    author: 'Robert C. Martin',
-  }
-
-  const response = await api.post('/api/blogs').send(newPost)
-  expect(response.status).toEqual(400)
-})
 
 afterAll(() => {
   mongoose.connection.close()
