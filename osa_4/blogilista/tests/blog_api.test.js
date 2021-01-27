@@ -4,6 +4,8 @@ const app = require('../app')
 const api = supertest(app)
 const helper = require('../tests/test_helper')
 const Blog = require('../models/blog')
+const bcrypt = require('bcrypt')
+const User = require('../models/user')
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -93,21 +95,58 @@ describe('deleting a blog', () => {
 })
 
 describe('updating a blog', () => {
-  test.only('updated blog is found updated in db after update', async () => {
+  test('updated blog is found updated in db after update', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToUpdate = blogsAtStart[0]
 
-    const updateData = { // All fields changed
-      title: 'Updated React patterns', 
-      author: 'Michael Chan II', 
-      url: 'https://reactpatterns.com/home', 
+    const updateData = {
+      // All fields changed
+      title: 'Updated React patterns',
+      author: 'Michael Chan II',
+      url: 'https://reactpatterns.com/home',
       likes: 8, //likes increased by 1
     }
 
-    const response = await api.put(`/api/blogs/${blogToUpdate.id}`).send(updateData).expect(200)
+    const response = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updateData)
+      .expect(200)
     const updatedBlog = response.body
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd[0]).toEqual(updatedBlog)
+  })
+})
+
+describe('when there is initially one user at db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
+  test.only('creation succeeds with a fresh username', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'vtulone',
+      name: 'Vili',
+      password: 'wordpass',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    expect(usernames).toContain(newUser.username)
   })
 })
 
