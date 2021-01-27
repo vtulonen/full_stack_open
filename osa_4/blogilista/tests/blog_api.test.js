@@ -76,23 +76,40 @@ describe('posting blogs', () => {
 })
 
 describe('deleting a blog', () => {
-  test.only('deleteing succeeds with status code 204 if id is valid', async () => {
+  test('deleteing succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
     await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
-    
+
     const blogsAtEnd = await helper.blogsInDb()
 
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
 
-    const titles = blogsAtEnd.map(item => item.title)
-    
+    const titles = blogsAtEnd.map((item) => item.title)
+
     expect(titles).not.toContain(blogToDelete.title)
   })
 })
 
+describe('updating a blog', () => {
+  test.only('updated blog is found updated in db after update', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
 
+    const updateData = { // All fields changed
+      title: 'Updated React patterns', 
+      author: 'Michael Chan II', 
+      url: 'https://reactpatterns.com/home', 
+      likes: 8, //likes increased by 1
+    }
+
+    const response = await api.put(`/api/blogs/${blogToUpdate.id}`).send(updateData).expect(200)
+    const updatedBlog = response.body
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd[0]).toEqual(updatedBlog)
+  })
+})
 
 afterAll(() => {
   mongoose.connection.close()
