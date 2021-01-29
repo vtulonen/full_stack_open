@@ -3,8 +3,8 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZ0dWxvbmUiLCJpZCI6IjYwMTNmNTE0NWVkN2VjMTc0MTA1MWY3MSIsImlhdCI6MTYxMTkyMTYwOX0.LZmXn2CHCCrcP62uXvDFDx1K5IDvDUZ9JVjiCF0OjMM
 
 {
-    "title": "Logged",
-    "author": "Logger",
+    "title": "Logged2",
+    "author": "Logger2",
     "url": "www.someurl.com",
-    "likes": 9
+    "likes": 100
 }
