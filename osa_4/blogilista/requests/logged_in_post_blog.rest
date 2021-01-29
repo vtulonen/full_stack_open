@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZ0dWxvbmUiLCJpZCI6IjYwMTNmNTE0NWVkN2VjMTc0MTA1MWY3MSIsImlhdCI6MTYxMTkyMTYwOX0.LZmXn2CHCCrcP62uXvDFDx1K5IDvDUZ9JVjiCF0OjMM
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imp1bGxlIiwiaWQiOiI2MDE0M2NjOGU3ZmI5MDFlOGYwYWJmNWUiLCJpYXQiOjE2MTE5MzkxMjd9.rSfJq_RdZNxO7SfqGHqgcvthA4TBoLEp0JPqKDRHLTg
 
 {
-    "title": "Logged2",
-    "author": "Logger2",
-    "url": "www.someurl.com",
-    "likes": 100
+    "title": "Juliusblog",
+    "author": "Dunno",
+    "url": "www.someurl23.com",
+    "likes": 1
 }
