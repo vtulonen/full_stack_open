@@ -116,7 +116,7 @@ describe('posting blogs', () => {
     expect(response.status).toEqual(400)
   })
 
-  test.only('unauthorized posts return 401', async () => {
+  test('unauthorized posts return 401', async () => {
     const newPost = {
       title: 'Type wars',
       author: 'Robert C. Martin',
