@@ -28,11 +28,9 @@ const blogsInDb = async () => {
 
 const initialUsers = [
   {
-    _id: '5a422aa71b54a676234d17f1',
     username: 'root',
     name: 'Superuser',
     password: 'salainen',
-    __v: 0,
   },
 ]
 

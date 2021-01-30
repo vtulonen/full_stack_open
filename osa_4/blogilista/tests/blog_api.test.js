@@ -6,6 +6,23 @@ const helper = require('../tests/test_helper')
 const Blog = require('../models/blog')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
+const { response } = require('express')
+
+let testUserToken
+
+beforeAll(async () => {
+  await User.deleteMany({})
+
+  const passwordHash = await bcrypt.hash('testpassword', 10)
+  const user = new User({ username: 'tester', passwordHash })
+  await user.save()
+
+  const response = await api
+    .post('/api/login') // login with said user
+    .send({ username: 'tester', password: 'testpassword' })
+  testUserToken = response.body.token
+  console.log(response.body)
+})
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -13,6 +30,21 @@ beforeEach(async () => {
   await blogObject.save()
   blogObject = new Blog(helper.initialBlogs[1])
   await blogObject.save()
+})
+
+describe('test user found in db and token is defined', () => {
+  test('user from beforeAll added', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    await api
+      .get('/api/users')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const usernames = usersAtStart.map((u) => u.username)
+    expect(usernames).toContain('tester')
+    expect(testUserToken).toBeDefined()
+  })
 })
 
 describe('intials blogs checked to work', () => {
@@ -44,14 +76,17 @@ describe('posting blogs', () => {
       url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
       likes: 2,
     }
-
-    await api.post('/api/blogs').send(newPost)
+    console.log(testUserToken)
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${testUserToken}`)
+      .send(newPost)
 
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
-    delete blogsAtEnd[blogsAtEnd.length - 1].id // delete id of new entry to compare
-    expect(blogsAtEnd).toContainEqual(newPost)
+    const urls = blogsAtEnd.map((b) => b.url)
+    expect(urls).toContain(newPost.url)
   })
 
   test('likes defaults to 1 if none is given', async () => {
@@ -119,12 +154,10 @@ describe('updating a blog', () => {
 
 describe('when there is initially one user at db', () => {
   beforeEach(async () => {
-    await User.deleteMany({})
-
-    const passwordHash = await bcrypt.hash('sekret', 10)
-    const user = new User({ username: 'root', passwordHash })
-
-    await user.save()
+    // await User.deleteMany({})
+    // const passwordHash = await bcrypt.hash('sekret', 10)
+    // const user = new User({ username: 'root', passwordHash })
+    // await user.save()
   })
 
   test('creation succeeds with a fresh username', async () => {
@@ -153,9 +186,9 @@ describe('when there is initially one user at db', () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
-      username: 'root',
-      name: 'Superuser',
-      password: 'salainen',
+      username: 'tester',
+      name: 'testman',
+      password: 'testpassword',
     }
 
     const result = await api
