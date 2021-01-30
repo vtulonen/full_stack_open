@@ -21,7 +21,7 @@ beforeAll(async () => {
     .post('/api/login') // login with said user
     .send({ username: 'tester', password: 'testpassword' })
   testUserToken = response.body.token
-  console.log(response.body)
+ 
 })
 
 beforeEach(async () => {
@@ -30,6 +30,7 @@ beforeEach(async () => {
   await blogObject.save()
   blogObject = new Blog(helper.initialBlogs[1])
   await blogObject.save()
+
 })
 
 describe('test user found in db and token is defined', () => {
@@ -62,7 +63,6 @@ describe('intials blogs checked to work', () => {
 
   test('returned blogs have a key id, not _id', async () => {
     const response = await api.get('/api/blogs')
-    console.log(response.body[0].id)
 
     expect(response.body[0].id).toBeDefined()
   })
@@ -76,7 +76,6 @@ describe('posting blogs', () => {
       url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
       likes: 2,
     }
-    console.log(testUserToken)
     await api
       .post('/api/blogs')
       .set('Authorization', `Bearer ${testUserToken}`)
@@ -96,7 +95,10 @@ describe('posting blogs', () => {
       url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
     }
 
-    await api.post('/api/blogs').send(newPost)
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${testUserToken}`)
+      .send(newPost)
 
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toEqual(0)
@@ -107,21 +109,39 @@ describe('posting blogs', () => {
       author: 'Robert C. Martin',
     }
 
-    const response = await api.post('/api/blogs').send(newPost)
+    const response = await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${testUserToken}`)
+      .send(newPost)
     expect(response.status).toEqual(400)
   })
 })
 
 describe('deleting a blog', () => {
+  beforeEach(async () => { // Add a new blog in db
+    
+    const newPost = {
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+      likes: 2,
+    }
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${testUserToken}`)
+      .send(newPost)
+  })
+
   test('deleteing succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
-    const blogToDelete = blogsAtStart[0]
-
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
-
+    const blogToDelete = blogsAtStart[2]
+    const response = await api.delete(`/api/blogs/${blogToDelete.id}`)
+    .set('Authorization', `Bearer ${testUserToken}`)
+    .expect(204)
+   
     const blogsAtEnd = await helper.blogsInDb()
 
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
 
     const titles = blogsAtEnd.map((item) => item.title)
 
