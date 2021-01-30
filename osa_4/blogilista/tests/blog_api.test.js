@@ -115,6 +115,20 @@ describe('posting blogs', () => {
       .send(newPost)
     expect(response.status).toEqual(400)
   })
+
+  test.only('unauthorized posts return 401', async () => {
+    const newPost = {
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+      likes: 2,
+    }
+
+    const response = await api
+      .post('/api/blogs') // no authorization header
+      .send(newPost)
+    expect(response.status).toEqual(401)
+  })
 })
 
 describe('deleting a blog', () => {
