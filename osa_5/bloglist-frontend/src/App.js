@@ -4,14 +4,26 @@ import LoggedUser from './components/LoggedUser'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [messageType, setMessageType] = useState(null)
+
+  const displayNotification = (type, text) => {
+    setMessageType(type)
+    setMessage(text)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
 
   const props = {
+    displayNotification,
     blogs,
     setBlogs,
     username,
@@ -20,8 +32,6 @@ const App = () => {
     setPassword,
     user,
     setUser,
-    errorMessage,
-    setErrorMessage,
   }
 
   useEffect(() => {
@@ -39,13 +49,14 @@ const App = () => {
 
   return (
     <div>
+      <h2>blogsite</h2>
+      <Notification type={messageType} message={message} />
       {user === null ? (
         <LoginForm {...props} />
       ) : (
         <>
-          <LoggedUser {...props}/>
-          <BlogForm {...props}/>
-          <h2>blogs</h2>
+          <LoggedUser {...props} />
+          <BlogForm {...props} />
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}

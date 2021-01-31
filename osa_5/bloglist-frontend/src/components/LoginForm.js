@@ -3,14 +3,12 @@ import loginService from '../services/login'
 import blogService from '../services/blogs'
 
 const LoginForm = ({
+  displayNotification,
   setUsername,
   setPassword,
   username,
   password,
-  user,
   setUser,
-  errorMessage,
-  setErrorMessage,
 }) => {
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -20,18 +18,13 @@ const LoginForm = ({
         password,
       })
 
-      window.localStorage.setItem(
-        'loggedUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      displayNotification('error', 'Invalid username or password')
     }
   }
   return (
