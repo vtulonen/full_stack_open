@@ -3,7 +3,7 @@ import Blog from './components/Blog'
 import LoggedUser from './components/LoggedUser'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
-
+import BlogForm from './components/BlogForm'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
@@ -12,6 +12,8 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
 
   const props = {
+    blogs,
+    setBlogs,
     username,
     setUsername,
     password,
@@ -31,6 +33,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -41,6 +44,7 @@ const App = () => {
       ) : (
         <>
           <LoggedUser {...props}/>
+          <BlogForm {...props}/>
           <h2>blogs</h2>
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
