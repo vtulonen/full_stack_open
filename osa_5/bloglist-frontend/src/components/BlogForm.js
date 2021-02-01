@@ -1,36 +1,22 @@
 import React, { useState } from 'react'
-import blogService from '../services/blogs'
 
-const BlogForm = ({ blogs, setBlogs, displayNotification }) => {
+const BlogForm = ({ displayNotification, createBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const addBlog = async (e) => {
+  const addBlog = (e) => {
     e.preventDefault()
-    const blogObject = {
-        title: title,
-        author: author,
-        url: url
-    }
-
-    try {
-        const retrunedBlog = await blogService.create(blogObject)
-        setBlogs(blogs.concat(retrunedBlog))
-        displayNotification('success', `Added "${title}" successfully`)
-        setTitle('')
-        setAuthor('')
-        setUrl('')
-
-    } catch(error) {
-        console.log(error)
-        console.log(error.response)
-        if (error.response.status === 400) {
-            displayNotification('error', error.response.data.error)
-        }
-
-    }
-
+    createBlog({
+      title: title,
+      author: author,
+      url: url,
+    })
+    
+    displayNotification('success', `Added "${title}" successfully`)
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   const handleTitleChange = (e) => {
@@ -46,27 +32,27 @@ const BlogForm = ({ blogs, setBlogs, displayNotification }) => {
   }
 
   return (
-      <>
+    <>
       <h2>Add a new blog</h2>
-    <form onSubmit={addBlog}>
-      <label>
-        name:
-        <input value={title} onChange={handleTitleChange} />
-      </label>
-      <br />
-      <label>
-        author:
-        <input value={author} onChange={handleAuthorChange} />
-      </label>
-      <br />
-      <label>
-        url:
-        <input value={url} onChange={handleUrlChange} />
-      </label>
-      <br />
+      <form onSubmit={addBlog}>
+        <label>
+          name:
+          <input value={title} onChange={handleTitleChange} />
+        </label>
+        <br />
+        <label>
+          author:
+          <input value={author} onChange={handleAuthorChange} />
+        </label>
+        <br />
+        <label>
+          url:
+          <input value={url} onChange={handleUrlChange} />
+        </label>
+        <br />
 
-      <button type='submit'>save</button>
-    </form>
+        <button type='submit'>save</button>
+      </form>
     </>
   )
 }

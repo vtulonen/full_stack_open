@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import LoggedUser from './components/LoggedUser'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -14,6 +15,8 @@ const App = () => {
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState(null)
 
+  const blogFormRef = useRef()
+
   const displayNotification = (type, text) => {
     setMessageType(type)
     setMessage(text)
@@ -22,10 +25,21 @@ const App = () => {
     }, 5000)
   }
 
+  const addBlog = async (blogObject) => {
+    blogFormRef.current.toggleVisibility()
+    try {
+      const returnedBlog = await blogService.create(blogObject)    
+        setBlogs(blogs.concat(returnedBlog))
+      } catch (exception){
+        if (exception.response.status === 400) {
+          displayNotification('error', exception.response.data.error)
+        }
+      }
+    }
+  
+
   const props = {
     displayNotification,
-    blogs,
-    setBlogs,
     username,
     setUsername,
     password,
@@ -56,7 +70,10 @@ const App = () => {
       ) : (
         <>
           <LoggedUser {...props} />
-          <BlogForm {...props} />
+          <Togglable btnText='New Blog' ref={blogFormRef} >
+            <BlogForm createBlog={addBlog} displayNotification={displayNotification}/>
+          </Togglable>
+
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
