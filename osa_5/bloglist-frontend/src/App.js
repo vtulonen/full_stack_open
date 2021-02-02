@@ -45,10 +45,16 @@ const App = () => {
     updatedBlogs[index] = blogObject
     try {
       await blogService.updateBlog(blogObject)
+      sortBlogsByLikes(updatedBlogs)
       setBlogs(updatedBlogs)
+      
     } catch (exception) {
       console.log(exception)
     }
+  }
+
+  const sortBlogsByLikes = (blogsArray) => {
+    return blogsArray.sort((a,b) => (b.likes - a.likes))
   }
 
   const props = {
@@ -62,7 +68,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    blogService.getAll().then((blogs) => setBlogs(sortBlogsByLikes(blogs)))
   }, [])
 
   useEffect(() => {
