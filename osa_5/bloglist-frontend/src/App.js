@@ -28,15 +28,28 @@ const App = () => {
   const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
     try {
-      const returnedBlog = await blogService.create(blogObject)    
-        setBlogs(blogs.concat(returnedBlog))
-      } catch (exception){
-        if (exception.response.status === 400) {
-          displayNotification('error', exception.response.data.error)
-        }
+      const returnedBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(returnedBlog))
+    } catch (exception) {
+      if (exception.response.status === 400) {
+        displayNotification('error', exception.response.data.error)
       }
     }
-  
+  }
+
+  const likeBlog = async (blogObject) => {
+    let updatedBlogs = [...blogs]
+    const index = updatedBlogs.findIndex((b) => b.id === blogObject.id)
+    blogObject.likes += 1
+
+    updatedBlogs[index] = blogObject
+    try {
+      await blogService.updateBlog(blogObject)
+      setBlogs(updatedBlogs)
+    } catch (exception) {
+      console.log(exception)
+    }
+  }
 
   const props = {
     displayNotification,
@@ -70,12 +83,15 @@ const App = () => {
       ) : (
         <>
           <LoggedUser {...props} />
-          <Togglable btnText='New Blog' ref={blogFormRef} >
-            <BlogForm createBlog={addBlog} displayNotification={displayNotification}/>
+          <Togglable btnText='New Blog' ref={blogFormRef}>
+            <BlogForm
+              createBlog={addBlog}
+              displayNotification={displayNotification}
+            />
           </Togglable>
 
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
           ))}
         </>
       )}
