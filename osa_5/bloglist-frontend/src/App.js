@@ -29,7 +29,6 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     try {
       const returnedBlog = await blogService.create(blogObject)
-      console.log(returnedBlog) // TODO UPDATE addblog to show user instantly
       setBlogs(blogs.concat(returnedBlog))
     } catch (exception) {
       if (exception.response.status === 400) {
@@ -83,7 +82,6 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then((blogs) =>  {
       setBlogs(sortBlogsByLikes(blogs))
-      console.log(blogs)
     })
    
   }, [])
