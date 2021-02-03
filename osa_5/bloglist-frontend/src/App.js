@@ -29,6 +29,7 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     try {
       const returnedBlog = await blogService.create(blogObject)
+      console.log(returnedBlog) // TODO UPDATE addblog to show user instantly
       setBlogs(blogs.concat(returnedBlog))
     } catch (exception) {
       if (exception.response.status === 400) {
@@ -47,14 +48,26 @@ const App = () => {
       await blogService.updateBlog(blogObject)
       sortBlogsByLikes(updatedBlogs)
       setBlogs(updatedBlogs)
-      
+    } catch (exception) {
+      console.log(exception)
+    }
+  }
+
+  const deleteBlog = async (blogObject) => {
+    const index = blogs.findIndex((b) => b.id === blogObject.id)
+
+    try {
+      await blogService.deleteBlog(blogObject)
+      let updatedBlogs = blogs
+      updatedBlogs.splice(index, 1)
+      setBlogs([...updatedBlogs])
     } catch (exception) {
       console.log(exception)
     }
   }
 
   const sortBlogsByLikes = (blogsArray) => {
-    return blogsArray.sort((a,b) => (b.likes - a.likes))
+    return blogsArray.sort((a, b) => b.likes - a.likes)
   }
 
   const props = {
@@ -68,7 +81,11 @@ const App = () => {
   }
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(sortBlogsByLikes(blogs)))
+    blogService.getAll().then((blogs) =>  {
+      setBlogs(sortBlogsByLikes(blogs))
+      console.log(blogs)
+    })
+   
   }, [])
 
   useEffect(() => {
@@ -97,7 +114,13 @@ const App = () => {
           </Togglable>
 
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              likeBlog={likeBlog}
+              deleteBlog={deleteBlog}
+              user={user}
+            />
           ))}
         </>
       )}
