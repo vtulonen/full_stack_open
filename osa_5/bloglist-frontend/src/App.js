@@ -83,7 +83,7 @@ const App = () => {
     blogService.getAll().then((blogs) =>  {
       setBlogs(sortBlogsByLikes(blogs))
     })
-   
+
   }, [])
 
   useEffect(() => {

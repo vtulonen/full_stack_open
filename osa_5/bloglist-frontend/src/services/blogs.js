@@ -33,9 +33,9 @@ const deleteBlog = async (blogObject) => {
       blogObject: blogObject
     }
   }
- 
+
   const response = await axios.delete(`${baseUrl}/${blogObject.id}`, config)
- 
+
   return response.data
 
 }
