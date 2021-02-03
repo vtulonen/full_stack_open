@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const Notification = ({ type, message }) => {
   const successStyle = {
@@ -27,6 +28,10 @@ const Notification = ({ type, message }) => {
   return (
     <div style={type === 'success' ? successStyle : errorStyle}>{message}</div>
   )
+}
+
+Notification.propTypes = {
+  type: PropTypes.oneOf(['success', 'error']),
 }
 
 export default Notification

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const BlogForm = ({ displayNotification, createBlog }) => {
   const [title, setTitle] = useState('')
@@ -12,7 +13,7 @@ const BlogForm = ({ displayNotification, createBlog }) => {
       author: author,
       url: url,
     })
-    
+
     displayNotification('success', `Added "${title}" successfully`)
     setTitle('')
     setAuthor('')
@@ -55,6 +56,11 @@ const BlogForm = ({ displayNotification, createBlog }) => {
       </form>
     </>
   )
+}
+
+BlogForm.propTypes = {
+  displayNotification: PropTypes.func,
+  createBlog: PropTypes.func.isRequired,
 }
 
 export default BlogForm
