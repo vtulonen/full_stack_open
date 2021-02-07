@@ -1,16 +1,11 @@
 import React from 'react'
 import Button from './Button'
 
-const LoggedUser = ({ user, setUser }) => {
-  const onLogout = () => {
-    window.localStorage.removeItem('loggedUser')
-    setUser(null)
-  }
-
+const LoggedUser = ({ user, handleLogout }) => {
   return (
     <div>
       <p>Logged in as {user.name}</p>
-      <Button text='logout' onClick={onLogout} />
+      <Button text='logout' onClick={handleLogout} />
     </div>
   )
 }

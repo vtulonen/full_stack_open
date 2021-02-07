@@ -7,6 +7,8 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 
+import loginService from './services/login'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
@@ -69,21 +71,33 @@ const App = () => {
     return blogsArray.sort((a, b) => b.likes - a.likes)
   }
 
-  const props = {
-    displayNotification,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    user,
-    setUser,
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    try {
+      const user = await loginService.login({
+        username,
+        password,
+      })
+
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
+      blogService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch (exception) {
+      displayNotification('error', 'Invalid username or password')
+    }
+  }
+
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedUser')
+    setUser(null)
   }
 
   useEffect(() => {
-    blogService.getAll().then((blogs) =>  {
+    blogService.getAll().then((blogs) => {
       setBlogs(sortBlogsByLikes(blogs))
     })
-
   }, [])
 
   useEffect(() => {
@@ -100,10 +114,15 @@ const App = () => {
       <h2>blogsite</h2>
       <Notification type={messageType} message={message} />
       {user === null ? (
-        <LoginForm {...props} />
+        <LoginForm
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleLogin={handleLogin}
+          displayNotification={displayNotification}
+        />
       ) : (
         <>
-          <LoggedUser {...props} />
+          <LoggedUser handleLogout={handleLogout} user={user} />
           <Togglable btnText='New Blog' ref={blogFormRef}>
             <BlogForm
               createBlog={addBlog}
