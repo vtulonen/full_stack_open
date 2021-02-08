@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Button from './Button'
 const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
   const [showMore, setShowMore] = useState(false)
 
@@ -24,22 +23,21 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div className='blog' style={blogStyle}>
       {blog.title} by {blog.author}
-      <Button
-        text={showMore ? 'Show less' : 'Show more'}
-        onClick={handleShowClick}
-      />
+      <button onClick={handleShowClick}>
+        {showMore ? 'Show less' : 'Show more'}
+      </button>
       {showMore && (
         <ul style={{ listStyleType: 'none' }}>
           <li>Url: {blog.url}</li>
-          <li>
+          <li className="blog__likes">
             Likes: {blog.likes}{' '}
-            <Button text='like' onClick={() => likeBlog(blog)} />
+            <button onClick={() => likeBlog(blog)}>like</button>
           </li>
           <li>User: {blog.user.name}</li>
           {user.username === blog.user.username && (
-            <Button text='delete' onClick={handleDeleteClick}></Button>
+            <button onClick={handleDeleteClick}>delete</button>
           )}
         </ul>
       )}

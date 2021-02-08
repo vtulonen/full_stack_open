@@ -39,11 +39,11 @@ const LoginForm = ({
 
 LoginForm.propTypes = {
   displayNotification: PropTypes.func,
-  setUsername: PropTypes.func.isRequired,
-  setPassword: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
-  setUser: PropTypes.func.isRequired,
+  handleLogin: PropTypes.func.isRequired,
+  handlePasswordChange: PropTypes.func.isRequired,
+  username: PropTypes.string,
+  password: PropTypes.string,
+  handleUsernameChange: PropTypes.func.isRequired,
 }
 
 export default LoginForm
