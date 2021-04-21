@@ -44,3 +44,21 @@ test('clicking show more renders url and likes', async () => {
   expect(div).toHaveTextContent('www.url.com')
   expect(div).toHaveTextContent('Likes: 2')
 })
+
+test('clicking like twice fires the onClick function twice', async () => {
+  const mockLikeClick = jest.fn()
+
+  const component = render(
+    <Blog blog={blog} user={user} likeBlog={mockLikeClick} />
+  )
+
+  const showMoreButton = component.getByText('Show more')
+  fireEvent.click(showMoreButton)
+
+  const likeButton = component.getByText('like')
+
+  fireEvent.click(likeButton) // click like button twice
+  fireEvent.click(likeButton)
+
+  expect(mockLikeClick.mock.calls.length).toBe(2)
+})

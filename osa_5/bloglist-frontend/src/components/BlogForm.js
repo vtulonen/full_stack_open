@@ -35,20 +35,20 @@ const BlogForm = ({ displayNotification, createBlog }) => {
   return (
     <>
       <h2>Add a new blog</h2>
-      <form onSubmit={addBlog}>
+      <form className="blog-form" onSubmit={addBlog}>
         <label>
           name:
-          <input value={title} onChange={handleTitleChange} />
+          <input className="blog-form__title" value={title} onChange={handleTitleChange} />
         </label>
         <br />
         <label>
           author:
-          <input value={author} onChange={handleAuthorChange} />
+          <input className="blog-form__author" value={author} onChange={handleAuthorChange} />
         </label>
         <br />
         <label>
           url:
-          <input value={url} onChange={handleUrlChange} />
+          <input className="blog-form__url" value={url} onChange={handleUrlChange} />
         </label>
         <br />
 
