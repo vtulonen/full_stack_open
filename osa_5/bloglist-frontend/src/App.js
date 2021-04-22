@@ -123,7 +123,7 @@ const App = () => {
       ) : (
         <>
           <LoggedUser handleLogout={handleLogout} user={user} />
-          <Togglable btnText='New Blog' ref={blogFormRef}>
+          <Togglable toggleBtnId='btn-create-blog' btnText='New Blog' ref={blogFormRef}>
             <BlogForm
               createBlog={addBlog}
               displayNotification={displayNotification}

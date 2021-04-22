@@ -25,7 +25,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
   return (
     <div className='blog' style={blogStyle}>
       {blog.title} by {blog.author}
-      <button onClick={handleShowClick}>
+      <button id='btn-toggle-show' onClick={handleShowClick}>
         {showMore ? 'Show less' : 'Show more'}
       </button>
       {showMore && (
@@ -33,7 +33,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
           <li>Url: {blog.url}</li>
           <li className="blog__likes">
             Likes: {blog.likes}{' '}
-            <button onClick={() => likeBlog(blog)}>like</button>
+            <button id='btn-like' onClick={() => likeBlog(blog)}>like</button>
           </li>
           <li>User: {blog.user.name}</li>
           {user.username === blog.user.username && (
