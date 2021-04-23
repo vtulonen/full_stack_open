@@ -48,3 +48,16 @@ Cypress.Commands.add('createBlog', ({ title, author, url }) => {
 
   cy.visit('http://localhost:3000')
 })
+
+Cypress.Commands.add('likeBlog', ({ blogTitle, amountOfLikes }) => {
+  cy.get('.blog').contains(blogTitle).as('blog')
+      cy.get('@blog').within(($blog) => {
+        cy.get('#btn-toggle-show').click()
+        for (let i = 0; i < amountOfLikes; i++) {
+          cy.get('#btn-like').click()
+          cy.wait(500)
+        }
+      })
+      
+  cy.visit('http://localhost:3000')
+})
