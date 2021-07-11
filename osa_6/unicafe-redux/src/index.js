@@ -12,12 +12,30 @@ const App = () => {
     })
   }
 
+  const bad = () => {
+    store.dispatch({
+      type: 'BAD'
+    })
+  }
+
+  const ok = () => {
+    store.dispatch({
+      type: 'OK'
+    })
+  }
+
+  const zero = () => {
+    store.dispatch({
+      type: 'ZERO'
+    })
+  }
+
   return (
     <div>
       <button onClick={good}>good</button> 
-      <button>neutral</button> 
-      <button>bad</button>
-      <button>reset stats</button>
+      <button onClick={ok}>neutral</button> 
+      <button Click={bad}>bad</button>
+      <button onClick={zero}>reset stats</button>
       <div>good {store.getState().good}</div>
       <div>neutral</div>
       <div>bad</div>
