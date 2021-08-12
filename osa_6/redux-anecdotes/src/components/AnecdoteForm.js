@@ -5,14 +5,17 @@ import {
   displayNotification,
   hideNotification,
 } from '../reducers/notificationReducer'
+import anecdoteService from '../services/anecdotes'
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
 
-  const createNew = (event) => {
+  const addAnecdote = async (event) => {
     event.preventDefault()
     const content = event.target.newAnecdote.value
-    dispatch(createAnecdote(content))
+    event.target.newAnecdote.value = ''
+    const newAnecdote = await anecdoteService.createNew(content)
+    dispatch(createAnecdote(newAnecdote))
     showNotification(`You created a new anecdote: "${content}"`, 5000)
   }
 
@@ -26,7 +29,7 @@ const AnecdoteForm = () => {
   return (
     <div>
       <h2>create new</h2>
-      <form onSubmit={createNew}>
+      <form onSubmit={addAnecdote}>
         <div>
           <input name='newAnecdote' />
         </div>
