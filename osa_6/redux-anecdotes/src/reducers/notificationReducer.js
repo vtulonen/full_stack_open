@@ -32,6 +32,13 @@ export const hideNotification = () => {
   }
 }
 
-//   setTimeout(() => {
-//     setMessage(null);
-//   }, 5000);
+export const setNotification = (msg, durationInSeconds) => {
+  return async (dispatch) => {
+    dispatch(displayNotification(msg))
+    setTimeout(() => {
+      dispatch(hideNotification())
+    }, secondsToMS(durationInSeconds))
+  }
+}
+
+const secondsToMS = seconds => seconds * 1000
