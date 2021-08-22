@@ -12,12 +12,13 @@ export const notificationReducer = (
   }
 }
 
-export const displayNotification = (notifactionText) => {
+export const displayNotification = (notifactionText, timeoutID) => {
   return {
     type: 'DISPLAY',
     data: {
       text: notifactionText,
       isVisible: true,
+      previousTimeoutID: timeoutID
     },
   }
 }
@@ -32,12 +33,20 @@ export const hideNotification = () => {
   }
 }
 
-export const setNotification = (msg, durationInSeconds) => {
+export const setNotification = (msg, durationInSeconds, previousTimeoutID) => {
   return async (dispatch) => {
-    dispatch(displayNotification(msg))
-    setTimeout(() => {
+
+    //Create timeout to dispatch the ID
+    let timeoutID = setTimeout(() => {
       dispatch(hideNotification())
     }, secondsToMS(durationInSeconds))
+
+    // Display the notification and save the timeout ID to store
+    dispatch(displayNotification(msg, timeoutID))
+
+    // Clears previous timeouts if still active
+    clearTimeout(previousTimeoutID)
+
   }
 }
 

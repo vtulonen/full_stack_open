@@ -12,10 +12,15 @@ const AnecdoteList = () => {
       a.content.toLowerCase().includes(state.filter)
     )
   })
+
+  const notification = useSelector((state) => {
+    return state.notifications
+  })
+
   const dispatch = useDispatch()
-  const vote = (anecdote) => {
+  const vote = (anecdote, notification) => {
     dispatch(voteAnecdote(anecdote.id))
-    dispatch(setNotification(`You voted for: "${anecdote.content}"`, 5))
+    dispatch(setNotification(`You voted for: "${anecdote.content}"`, 5, notification.previousTimeoutID))
   }
 
   return (
@@ -27,7 +32,7 @@ const AnecdoteList = () => {
             <div>{anecdote.content}</div>
             <div>
               has {anecdote.votes}
-              <button onClick={() => vote(anecdote)}>vote</button>
+              <button onClick={() => vote(anecdote, notification)}>vote</button>
             </div>
           </div>
         ))}
